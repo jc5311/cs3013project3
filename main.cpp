@@ -54,6 +54,8 @@ int testval = 1;
 
 //thread routine
 void *pt_routine(void *arg){
+	sem_wait(&sem_addr[*(int*)arg]);
+	cout << "My sem was posted to." << endl;
 	return NULL;
 }
 
@@ -70,16 +72,15 @@ int main (int argc, char* argv[]){
 	*/
 
 	//collect num arg from command line
-	if (argc > 1){
-		int numarg = atoi(argv[1]);
-		cout << numarg << endl;
+	if (argc == 3){
+		int numarg1 = atoi(argv[1]);
+		int numarg2 = atoi(argv[2]);
+		cout << numarg1 << " " << numarg2 << endl;
 	}
 
 	//create 10 semaphores
 	for (int i = 1; i <= MAXTHREAD; i++){
-		cout << "Creating sem " << i << endl;
 		int retval = sem_init(&sem_addr[i], 0, 1);
-		cout << "Attempt complete." << endl;
 		if (retval < 0){
 			cerr << "sem_init error";
 		}
@@ -87,13 +88,19 @@ int main (int argc, char* argv[]){
 
 	//create 10 threads and call the pt_thread routine on each
 	for (int i = 1; i <= MAXTHREAD; i++){
-		cout << "Creating thread " << i << endl;
 		int retval = pthread_create(&tids[i], NULL, pt_routine, &i);
 		if (retval != 0){
 			cerr << "pthread_create error";
 		}
-		cout << "Attempt complete." << endl;
 	}
+
+	//signal semaphores
+	sleep (3);
+	for (int i = 1; i <= MAXTHREAD; i++){
+		sem_post(&sem_addr[i]);
+		sleep(1);
+	}
+
 
 	return 0;
 } //end of main
