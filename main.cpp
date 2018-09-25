@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <unistd.h>
 
 using namespace std;
@@ -45,28 +46,54 @@ public:
 };
 
 //global vars
-static msg mailboxes[MAXTHREAD+1]; //"message = mailbox"
-int *testval;
+static msg mailboxes[MAXTHREAD+1]; //"message = mailbox"; mailboxes
+static sem_t sem_addr[MAXTHREAD+1]; //semaphore addresses for each mailbox
+static pthread_t tids[MAXTHREAD + 1]; //thread tids
+int testval = 1;
 
 
 //thread routine
 void *pt_routine(void *arg){
-	*(int*)arg += 5;
 	return NULL;
 }
 
 
 //main
 int main (int argc, char* argv[]){
+	/*
 	//testing the use of threads
-	int retval = 10;
-	int testval = 4;
-	pthread_t *tid; //testing
 	cout << "We are here 1." << endl;
 	retval = pthread_create(tid, NULL, pt_routine, (void*)&testval);
 	cout << "pthread_create returned: " << retval << endl;
 	sleep(3);
 	cout << "The new value for testval is: " << testval << endl;
-	
+	*/
+
+	//collect num arg from command line
+	if (argc > 1){
+		int numarg = atoi(argv[1]);
+		cout << numarg << endl;
+	}
+
+	//create 10 semaphores
+	for (int i = 1; i <= MAXTHREAD; i++){
+		cout << "Creating sem " << i << endl;
+		int retval = sem_init(&sem_addr[i], 0, 1);
+		cout << "Attempt complete." << endl;
+		if (retval < 0){
+			cerr << "sem_init error";
+		}
+	}
+
+	//create 10 threads and call the pt_thread routine on each
+	for (int i = 1; i <= MAXTHREAD; i++){
+		cout << "Creating thread " << i << endl;
+		int retval = pthread_create(&tids[i], NULL, pt_routine, &i);
+		if (retval != 0){
+			cerr << "pthread_create error";
+		}
+		cout << "Attempt complete." << endl;
+	}
+
 	return 0;
 } //end of main
