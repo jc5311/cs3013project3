@@ -9,6 +9,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -43,13 +45,28 @@ public:
 };
 
 //global vars
-msg mailboxes[MAXTHREAD+1]; //"message = mailbox"
+static msg mailboxes[MAXTHREAD+1]; //"message = mailbox"
+int *testval;
 
+
+//thread routine
+void *pt_routine(void *arg){
+	*(int*)arg += 5;
+	return NULL;
+}
+
+
+//main
 int main (int argc, char* argv[]){
-	//lets just test the use of our mailbox and stuff really quick
-	cout << "Mailbox 0 iSender value is: " << mailboxes[0].iSender << endl;
-	cout << "Calling Mailbox 0's SendMsg method: " << mailboxes[0].SendMsg() << endl;
-
-
+	//testing the use of threads
+	int retval = 10;
+	int testval = 4;
+	pthread_t *tid; //testing
+	cout << "We are here 1." << endl;
+	retval = pthread_create(tid, NULL, pt_routine, (void*)&testval);
+	cout << "pthread_create returned: " << retval << endl;
+	sleep(3);
+	cout << "The new value for testval is: " << testval << endl;
+	
 	return 0;
 } //end of main
