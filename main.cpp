@@ -75,13 +75,23 @@ void *wthreadRoutine(void *arg){
 void *pthreadRoutine(void *arg){
 	//send messages to all thread mailboxes
 	int sum = 0;
-	int jincrementer;
+	int start = 1, end = 0, mod = 0;
 	for (int i = 1; i <= num_threads; i++){
+		//do some number play since things get weird when the number to sum_to
+		//is not evenly divisble by the num_threads
+		if (i > 1)
+			start = end + 1;
+		end = (start - 1) + (sum_to/num_threads);
+		mod = sum_to % num_threads;
+
+		if (i <= mod)
+			end++;
+
 		msg message;
 		message.iSender = 0;
 		message.type = RANGE;
-		message.value1 = 1;
-		message.value2 = sum_to;
+		message.value1 = start;
+		message.value2 = end;
 		SendMsg(i, &message);
 	}
 
