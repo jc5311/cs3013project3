@@ -1,9 +1,13 @@
 
-output: main.o
-	g++ -pthread main.o -o addem
+all: addem.o life.o
+	g++ -pthread addem.o -o addem
+	g++ -pthread life.o -o life
 
-main.o: main.cpp
-	g++ -c main.cpp
+addem.o: addem.cpp
+	g++ -c addem.cpp
+
+life.o: life.cpp
+	g++ -c life.cpp
 
 clean:
-	rm *.o addem
+	rm *.o addem life

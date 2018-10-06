@@ -1,0 +1,56 @@
+Programs created by Juan Caraballo
+
+
+--- Test runs for the addem program ---
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 1 100
+The total for 1 to 100 using 1 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 3 100
+The total for 1 to 100 using 3 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 6 100
+The total for 1 to 100 using 6 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 7 100
+The total for 1 to 100 using 7 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 9 100
+The total for 1 to 100 using 9 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 10 100
+The total for 1 to 100 using 10 threads is 5050
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./addem 50 100
+The total for 1 to 100 using 10 threads is 5050
+
+
+--- Test runs for the life program ---
+Test Grid 1:
+0 1 0 0
+0 0 1 0
+1 0 0 1
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./life 10 test1.txt 6 y
+Generation 0
+0 1 0 0 
+0 0 1 0 
+1 0 0 1 
+* Program gets stuck here and nothing seems to be occuring
+
+Test Grid 2:
+1 1 0 0 0 1
+0 1 0 1 1 0
+0 0 0 0 0 1
+1 1 0 0 0 1
+1 1 1 1 1 1
+
+jc@silverphantasm:~/githubs/cs3013project3$ ./life 10 test2.txt 6 y
+Generation 0
+1 1 0 0 0 1 
+0 1 0 1 1 0 
+0 0 0 0 0 1 
+1 1 0 0 0 1 
+1 1 1 1 1 1 
+* Program again gets stuck here and nothing seems to be occuring
+
+As mentioned in my source file: At its current state this program seems to be getting stuck after printing out the mapping of generation 0. I believe it may be due to the pending and blocking on a semaphore as I had a similar issue with my addem program however that was fixed and was due to a semaphore posted at the wrong time (causing a deadlock). And because the message passing system works for addem I question whether the issue in this life program is actually due to that same problem.
